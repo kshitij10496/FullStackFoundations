@@ -1,3 +1,16 @@
+######## Database Design #######
+'''
+     ____________                _______________
+    | Restaurant |              |   Menu_Item   |
+    |------------|              |---------------|
+    |    name    |              |      name     |
+    |     id     |------        |  description  |
+     ------------       |       |      price    |
+                        |       |     course    |
+                         ------>| restaurant_id |
+                                 ---------------
+'''
+
 import sys
 
 from sqlalchemy import Column, ForeignKey, Integer, String
