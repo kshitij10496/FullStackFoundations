@@ -9,8 +9,10 @@ Base = declarative_base()
 
 ######## Class ########### 
 class Restaurant(Base):
+    __tablename__ = 'restaurant'
 
 class MenuItem(Base):
+    __tablename__ = 'menu_item'
 
 ######## Configuration: at the end of the file ########
 engine = create_engine('sqlite:///restaurantmenu.db')
