@@ -9,12 +9,19 @@ Base = declarative_base()
 
 ######## Class ########### 
 class Restaurant(Base):
+    ####### Table #######
     __tablename__ = 'restaurant'
+
+    ####### Mapper #######
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
 
+####### Class #######
 class MenuItem(Base):
+    ####### Table #######
     __tablename__ = 'menu_item'
+
+    ####### Mapper #######
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
     course = Column(String(250))
@@ -22,8 +29,7 @@ class MenuItem(Base):
     price = Column(String(8))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
- 
+
 ######## Configuration: at the end of the file ########
 engine = create_engine('sqlite:///restaurantmenu.db')
-
 Base.metadata.create_all(engine)
