@@ -77,7 +77,11 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 output += "<h1>List of all the restaurants</h1>"
                 
                 for restaurant in all_restaurants:
-                    output += "<h3>{}</h3><br>".format(restaurant.name)
+                    output += restaurant.name
+                    output += '<br>'
+                    output += '<a href="#">Edit</a> '
+                    output += '<a href="#">Delete</a>'
+                    output += '<br>'
 
                 output += "</body></html>"# sending message back to the client
                 self.wfile.write(output)
