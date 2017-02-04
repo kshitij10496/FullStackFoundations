@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -12,16 +12,11 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-@app.route('/')
-@app.route('/hello')
-def hello():
-    items = session.query(MenuItem).first()
-    output = ''
-    for item in items:
-        output += item.name + '<br>'
-        output += item.price + '<br>'
-        output += item.description + '<br>'
-    return output
+@app.route('/restaurants/<int:restaurant_id>/')
+def restaurantMenu(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id)
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id)
+    return render_template('menu.html', restaurant=restaurant, items=items)
 
 # Task 1: Create route for newMenuItem function here
 @app.route('/restaurant/new/<int:restaurant_id>')
