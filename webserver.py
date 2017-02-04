@@ -14,10 +14,20 @@ Design of the Web Server Code
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import cgi
 
+############## Adding CRUD Operations ###############
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from database_setup import Base, Restaurant, MenuItem # importing classes
 ############## handler code ###################
 '''
 Indicates what code to execute based on the type of HTTP request that is sent to the server.
 '''
+engine = create_engine('sqlite:///restaurantmenu.db') 
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
 class WebServerHandler(BaseHTTPRequestHandler):
     '''Request Handler Class.'''
     def do_GET(self):
@@ -52,6 +62,24 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
                 output += "</body></html>"
                 # sending message back to the client
+                self.wfile.write(output)
+                print(output)
+                return
+
+            if self.path.endswith('/restaurants'):
+                self.send_response(200)
+                self.send_header('Content-type', 'text/html')
+                self.end_headers()
+
+                all_restaurants = session.query(Restaurant).all()
+                output = ""
+                output += "<html><body>"
+                output += "<h1>List of all the restaurants</h1>"
+                
+                for restaurant in all_restaurants:
+                    output += "<h3>{}</h3><br>".format(restaurant.name)
+
+                output += "</body></html>"# sending message back to the client
                 self.wfile.write(output)
                 print(output)
                 return
