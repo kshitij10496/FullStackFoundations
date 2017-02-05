@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+
+# jsonify: allows us to easily configure an API endpoint for our application.
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -58,6 +60,13 @@ def deleteMenuItem(restaurant_id, menu_id):
     else:
         return render_template('deletemenuitem.html', restaurant_id=restaurant_id, item=item)
 
+# Making API Endpoint(GET)
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+def restaurantMenuJSON(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id).all()
+
+    return jsonify(MenuItems=[i.serialize for i in items])
 
 if __name__ == '__main__':
     app.secret_key='SECRET_KEY' # Flask will use this to create "sessions"
